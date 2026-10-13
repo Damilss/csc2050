@@ -1,0 +1,52 @@
+#!/bin/bash
+
+# Author: Paris Kalathas
+# Date: 09/18/2026
+# Assignment 1: Statistics, a script that calculates the average and the median of a file with rows and columns of numbers.
+
+option=$1		# Stores the option for rows or columns passed as the first parameter
+filename=$2		# Stores the name of the file passed as the second parameter
+
+if [[ $# -lt 1 ]] || [[ $# -gt 2 ]]; then 	# Checking for the rigth number of parameters
+	echo 'Usage: statistics {-rows|-cols} [file]'
+fi
+
+if [[ ! -e "$filename" ]] || [[ ! -r "$filename" ]]; then	# Checking if file exists and if readable
+	echo "statistics: cannot read "$filename""
+fi
+
+if [[ "$option" == -rows ]]; then 			# Branch that calculates the average and median for rows
+	echo 'Calculating rows average & median'
+	
+	elements=$(head -1 "$filename" | wc -w)	# Calculates the number of elements in a line. Takes one line from the file, and counts the number of words in it.
+
+	while read line; do		# Reads the file line by line
+		sum=0				# Initializes the sum for the average
+		echo > tmpFile$$	# Creates the temp file for sorting the numbers for the extracting the median
+
+		for((i=1; i<="$elements"; i++)); do				# Iterates through every element in the string to extract it and add it to the average
+			value=$(echo "$line" | cut -d " " -f"$i")	# Extracts the ith element
+			sum=$(("$sum" + "$value"))					# Adds the element to the sum
+			echo "$value" >> tmpFile$$					# Appents the element into the file for sorting later
+			
+		done
+
+		#vrar=$(sort -h tmpFile$$)
+		mdnIndex=$(("$elements" / 2))		# Calculates the index for the median
+		echo $mdnIndex
+		median=$(sort -h tmpFile$$ | head -"$mdnIndex" | tail -1)	# Sorts the temp file, then using head gets all the numbers form the beginning down to the median index, and then using tail gets the last element, which is the median.
+
+		average=`expr "$sum" / "$elements"`  # Calculates the average
+
+		echo "$average"
+		echo "$median"
+
+	done < "$filename"
+
+
+
+elif [[ "$option" == -cols ]]; then 		# Branch that calculates the average and median for columns
+	echo 'Calculating cols average &median'
+else										# Branch for error if wrong option is given
+	echo 'Usage: statistics {-rows|-cols} [file]'
+fi

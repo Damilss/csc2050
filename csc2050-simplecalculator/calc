@@ -1,0 +1,66 @@
+#!/bin/bash
+
+# calc
+# Emilio Scott
+# 2026.09.08
+# A simple calculator script that takes three parameters and calculates
+# through five different operations: ADD, SUB, MUL, DIV and MOD
+
+# Makes sure that there is three parameters, if not then return error and exit the script.
+if [[ $# -ne 3 ]]
+then
+        echo "usage: $0 operand1 operator operand2" >&2
+        exit 1
+fi
+
+operand1=$1
+operator=$2
+operand2=$3
+
+# checking that both operands are integers
+# ^-?[0-9]+$ is a regex: ^ anchors the start, -? allows an optional
+# leading minus, [0-9]+ requires one or more digits, $ anchors the end.
+# =~ applies the pattern. Using [[ ]] avoids a subshell, unlike grep.
+
+if [[ ! "$operand1" =~ ^-?[0-9]+$ ]] || [[ ! "$operand2" =~ ^-?[0-9]+$ ]]
+then
+        echo "Invalid operand" >&2
+        exit 1
+fi
+
+# checking the operator whether its ADD, SUB, MUL, DIV or MOD
+if [[ "$operator" = "+" ]]
+then
+        echo $(( operand1 + operand2 ))
+        exit 0
+elif [[ "$operator" = "-" ]]
+then
+        echo $(( operand1 - operand2 ))
+        exit 0
+elif [[ "$operator" = "*" ]]
+then
+        echo $(( operand1 * operand2 ))
+        exit 0
+elif [[ "$operator" = "/" ]]
+then
+        if [[ $operand2 -eq 0 ]]
+        then
+                echo "Division by zero" >&2
+                exit 1
+        fi
+        echo $(( operand1 / operand2 ))
+        exit 0
+elif [[ "$operator" = "%" ]]
+then
+        if [[ $operand2 -eq 0 ]]
+        then
+                echo "Division by zero" >&2
+                exit 1
+        fi
+        echo $(( operand1 % operand2 ))
+        exit 0
+fi
+
+# echos wrong operator if none of the operators were applicable
+echo "Wrong operator" >&2
+exit 1
