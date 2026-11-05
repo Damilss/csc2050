@@ -1,5 +1,5 @@
 # Mac stuff
-.DS_Store
+*.DS_Store
 
 #executables
 *.out
