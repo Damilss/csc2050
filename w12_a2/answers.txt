@@ -1,0 +1,15 @@
+1.) What happens if you print a string after the fork() but before the switch statement?
+
+The string() still prints twice
+
+2.) Which process prints the string?
+
+both the child and the parent process print the string
+
+3.) What happens if you print a string before the fork?
+
+It only prints once as oposed to twice by both processes.
+
+4.) Which processes print the strings?
+
+Only the parent process prints the string.
